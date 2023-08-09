@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 
+/rem.txt
+
 # testing
 /coverage
 
