@@ -1,5 +1,6 @@
 "use client"
-
+import * as React from "react"
+//import './style.css'
 import { ColumnDef } from "@tanstack/react-table"
 import { AiOutlineMore } from 'react-icons/ai';
 import { RiArrowUpDownLine } from 'react-icons/ri';
@@ -15,14 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+
 export type Payment = {
   id: string
   amount: number
   status: "pending" | "processing" | "success" | "failed"
   email: string
-  mobileNumber: string // Add the mobile number field
+  mobileNumber: string 
 }
 
 export const columns: ColumnDef<Payment>[] = [
@@ -53,6 +53,7 @@ export const columns: ColumnDef<Payment>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="md:w-32 lg:w-38"
         >
           Email
           <RiArrowUpDownLine className="ml-2 h-4 w-4" />
@@ -68,6 +69,7 @@ export const columns: ColumnDef<Payment>[] = [
         style={{paddingLeft:'0.3rem'}}
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="md:w-32 lg:w-38"
         >
          Balance 
           <RiArrowUpDownLine className="ml-4 h-4 w-4" />
@@ -89,13 +91,14 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Status",
   },
   {
-    accessorKey: "mobileNumber", // Change this to the correct key for mobile number in your data
+    accessorKey: "mobileNumber", 
     header: "Mobile Number",
   },
   {
     id: "actions",
     cell: ({ row }) => {
       const payment = row.original
+ 
  
       return (
         <DropdownMenu>
@@ -118,7 +121,7 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                // Handle sending a request for money here
+             
                 console.log('Sending request for money:', payment.id);
               }}
             >
