@@ -1,3 +1,4 @@
+import { Heading } from "@/components/Heading"
 import { Payment, columns } from "./column"
 import { DataTable } from "./data-table"
 
@@ -139,6 +140,10 @@ export default async function DemoPage() {
 
   return (
     <div className="container mx-auto py-10">
+      <Heading 
+          title="Dashboard"
+          description="Welcome to the dashboard."
+      />
       <DataTable columns={columns} data={data} />
     </div>
   )
