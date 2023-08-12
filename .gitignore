@@ -7,6 +7,8 @@
 
 /rem.txt
 
+.env
+
 # testing
 /coverage
 
