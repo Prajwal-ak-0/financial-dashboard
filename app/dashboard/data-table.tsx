@@ -32,7 +32,6 @@ import {
   TableRow,
 } from "../../components/ui/table"
 
-/* Add this CSS in your project's styles */
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -71,7 +70,7 @@ export function DataTable<TData, TValue>({
           style={{
             backgroundColor: 'black',
             color: 'white',
-            transition: 'background-color 0.3s, color 0.3s', // Adding transition for smooth color change
+            transition: 'background-color 0.3s, color 0.3s', 
           }}
         />
         <DropdownMenu>
@@ -121,28 +120,36 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+  {table.getRowModel().rows?.length ? (
+    table.getRowModel().rows.map((row) => (
+      <TableRow
+        key={row.id}
+        data-state={row.getIsSelected() && "selected"}
+      >
+        {row.getVisibleCells().map((cell, index) => (
+          <TableCell
+            key={cell.id}
+            style={{
+              marginLeft: index * 20 + 'px', // Apply margin based on index
+              padding: '8px', // Adjust padding as needed
+              textAlign: 'left', // Align content to the left
+            }}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        No results.
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">

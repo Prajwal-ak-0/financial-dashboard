@@ -1,11 +1,10 @@
 "use client"
 import * as React from "react"
-//import './style.css'
+import './style.css'
+import GooglePayButtonComponent from "./GooglePayButtonComponent"
 import { ColumnDef } from "@tanstack/react-table"
 import { AiOutlineMore } from 'react-icons/ai';
 import { RiArrowUpDownLine } from 'react-icons/ri';
-import { Checkbox } from "../../components/ui/checkbox"
-
 import { Button } from "../../components/ui/button"
 import {
   DropdownMenu,
@@ -15,61 +14,68 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
-
+import client from "@/lib/prismadb";
 
 export type Payment = {
   id: string
   amount: number
-  status: "pending" | "processing" | "success" | "failed"
   email: string
   mobileNumber: string 
+  slNo: number
+  upiId: string
+}
+
+const CopyUpiId = ({ upiId }: { upiId: string }) => {
+  const copyUpiIdToClipboard = () => {
+    navigator.clipboard.writeText(upiId);
+  };
+
+  return (
+    <DropdownMenuItem onClick={copyUpiIdToClipboard}>
+      Copy UPI ID
+    </DropdownMenuItem>
+  );
 }
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
+    accessorKey: "slNo", 
+    header: "Sl.No",
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+      <div className="table-cell-bold" style={{ fontWeight: 'bold', color: 'black' }}>{row.index + 1}</div>
     ),
-    enableSorting: false,
-    enableHiding: false,
+   // disableResizing: true, // Prevent resizing for this column
   },
-  
   {
     accessorKey: "email",
     header: ({ column }) => {
+      const isSortedAsc = column.getIsSorted() === "asc";
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(!isSortedAsc)}
           className="md:w-32 lg:w-38"
         >
           Email
-          <RiArrowUpDownLine className="ml-2 h-4 w-4" />
+          <RiArrowUpDownLine className={`table-header-icon ${isSortedAsc ? 'asc' : 'desc'}`} />
         </Button>
       )
     },
+    cell: ({ row }) => (
+      <div className="table-cell-text"> 
+       {} {row.getValue("email")}
+      </div>
+    ),
   },
   {
     accessorKey: "amount",
     header: ({column}) => {
       return (
         <Button
-        style={{paddingLeft:'0.3rem'}}
+        style={{marginLeft: '-26px'}}
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="md:w-32 lg:w-38"
+          className="text-left md:w-32 lg:w-38"
         >
          Balance 
           <RiArrowUpDownLine className="ml-4 h-4 w-4" />
@@ -77,28 +83,34 @@ export const columns: ColumnDef<Payment>[] = [
       )
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-US", {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-IN", {
         style: "currency",
-        currency: "USD",
-      }).format(amount)
+        currency: "INR", 
+      }).format(amount);
  
-      return <div className="text-start font-medium">{formatted}</div>
+      return <div className="text-left md:w-32 lg:w-38 font-medium">{formatted}</div>
     },
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+
+  
   {
     accessorKey: "mobileNumber", 
     header: "Mobile Number",
   },
+ 
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
+     const payment = row.original
  
+     const sendRequestForMoney = () => {
+      console.log('Sending request for money:', payment.upiId);
+    };
+    const openPaymentDetails = () => {
+ 
+      alert(`Payment ID: ${payment.id}\nAmount: ${payment.amount}\nEmail: ${payment.email}\nMobile Number: ${payment.mobileNumber}`);
+    };
  
       return (
         <DropdownMenu>
@@ -110,27 +122,30 @@ export const columns: ColumnDef<Payment>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
+            <DropdownMenuItem>
+            <CopyUpiId upiId={payment.upiId} />
+          </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+         {/*   <DropdownMenuItem>View customer</DropdownMenuItem>  */}
+         <DropdownMenuItem onClick={openPaymentDetails}>
+            View payment details
+          </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-             
-                console.log('Sending request for money:', payment.id);
-              }}
-            >
-              Send Request for Money
+            <DropdownMenuItem onClick={sendRequestForMoney}>
+            Send Request for Money
+          </DropdownMenuItem>
+          <DropdownMenuItem >
+           <GooglePayButtonComponent/>
             </DropdownMenuItem>
+          <DropdownMenuItem >
+            Add Item
+          </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
       
     },
   },
+    
 ]
+export default columns
