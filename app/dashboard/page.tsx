@@ -10,7 +10,7 @@ async function getData(): Promise<Payment[]> {
     {
       id: "728ed52f",
       amount: 1000,
-      email: "taneeshkerpala@gmail.com",
+      email: "taneeshkerpalagmail.com",
       mobileNumber: "9916706697", 
       slNo: 1,
       upiId: "taneeshkerpala@okhdfcbank",

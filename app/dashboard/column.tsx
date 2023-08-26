@@ -16,6 +16,12 @@ import {
 } from "../../components/ui/dropdown-menu"
 import client from "@/lib/prismadb";
 
+function isValidEmail(email: string): boolean {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
+}
+
+
 export type Payment = {
   id: string
   amount: number
@@ -37,6 +43,16 @@ const CopyUpiId = ({ upiId }: { upiId: string }) => {
   );
 }
 
+const EmailCell = ({ email }: { email: string }) => {
+  const valid = isValidEmail(email);
+  
+  return (
+    <div className={`table-cell-text ${valid ? 'valid-email' : 'invalid-email'}`}>
+      {email}
+    </div>
+  );
+};
+
 export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "slNo", 
@@ -44,7 +60,6 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <div className="table-cell-bold" style={{ fontWeight: 'bold', color: 'black' }}>{row.index + 1}</div>
     ),
-   // disableResizing: true, // Prevent resizing for this column
   },
   {
     accessorKey: "email",
@@ -63,7 +78,7 @@ export const columns: ColumnDef<Payment>[] = [
     },
     cell: ({ row }) => (
       <div className="table-cell-text"> 
-       {} {row.getValue("email")}
+             <EmailCell email={row.getValue("email")} />
       </div>
     ),
   },

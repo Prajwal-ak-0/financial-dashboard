@@ -1,34 +1,42 @@
 /* Common styles for table cells */
 .table-cell-bold {
-    font-weight: bold;
-    color: black;
-  }
-  
-  .table-cell-text {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  
+  font-weight: bold;
+  color: black;
+}
+
+.table-cell-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.table-header-button {
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+}
+
+.table-header-icon {
+  margin-left: 0.5rem;
+}
+
+/* Email validation styles */
+.valid-email {
+  color: green; /* Valid email address color */
+}
+
+.invalid-email {
+  color: red; /* Invalid email address color */
+}
+
+
+@media (max-width: 768px) {
   .table-header-button {
-    font-size: 14px;
-    padding: 0.5rem 1rem;
+    font-size: 12px;
+    padding: 1rem 1rem;
   }
   
+  .table-cell-text,
+  .table-cell-bold,
   .table-header-icon {
-    margin-left: 0.5rem;
+    font-size: 12px;
   }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .table-header-button {
-      font-size: 12px;
-      padding: 1rem 1rem;
-    }
-    
-    .table-cell-text,
-    .table-cell-bold,
-    .table-header-icon {
-      font-size: 12px;
-    }
-  }
-  
+}

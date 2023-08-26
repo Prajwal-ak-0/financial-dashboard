@@ -1,8 +1,7 @@
 "use client"
- 
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
- 
+
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
@@ -29,33 +28,37 @@ const formSchema = z.object({
 })
 
 export const Userform = () => {
-
-    const [loading,setLoading]=useState(false);
-    const router=useRouter();
-
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+  
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-          name: "", 
-          email: "",
-          number: "",
-          price: "",
-        },
-      })
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        name: "",
+        email: "",
+        number: "",
+        price: "",
+      },
+    });
+  
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+      try {
+        setLoading(true);
 
-      const onSubmit=async (data: z.infer<typeof formSchema>) => {
-        try {
-            if(data){
-                setLoading(true);
-                await axios.post("/api/new", data);
-                setLoading(false);
-            }
-            toast.success("User Added Successfully");
-            router.refresh();
-        } catch (error) {
-            console.log(error)
-        }
+          setLoading(true);
+          await axios.post("../page/api/api_four", data);
+          setLoading(false);
+       
+          setLoading(false);
+        toast.success("User Added Successfully");
+        console.log(data);
+        router.push('/'); 
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      toast.error("An error occurred");
       }
+    };
 
     return (
         <>
@@ -129,9 +132,10 @@ export const Userform = () => {
                 <div className="item-center justify-center md:flex">
                     <Button 
                         type="submit"
-                        className={buttonVariants({variant:"ghost"})}   
+                        className={buttonVariants({variant:"ghost"})} 
+                        disabled={loading}  
                     >
-                        Submit
+                        {loading ? "Submiting..." : "Submit"}
                     </Button>
                 </div>
             </Form>
